@@ -15,11 +15,15 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = Task :: all()->where('user_id',"=",$user->id);
 
-        return view('tasks.index', [
-            'tasks' => $tasks,
-        ]);
+            return view('tasks.index', ['tasks' => $tasks]);
+        }else {
+            return view('tasks.welcome');
+    }
     }
 
     /**
