@@ -17,7 +17,7 @@ class TasksController extends Controller
     {
         $tasks = Task::all();
 
-        return view('tasks.index', [
+        return view('tasks.welcome', [
             'tasks' => $tasks,
         ]);
     }
