@@ -48,15 +48,17 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
+        
         $this->validate($request, [
-            'status' => 'required|max:10',
+            'status' => 'required|max:10',   // add
             'content' => 'required|max:10',
         ]);
+
         
-        $task = new Task;
-        $task->status = $request->status;
-        $task->content = $request->content;
-        $task->save();
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
 
         return redirect('/');
     }
@@ -85,10 +87,17 @@ class TasksController extends Controller
     public function edit($id)
     {
             $task = Task::find($id);
-
-        return view('tasks.edit', [
+            
+            if (\Auth::user()->id === $task->user_id) {
+            return view('tasks.edit', [
             'task' => $task,
-        ]);
+            
+         ]);
+            }
+        else{
+            return redirect('/');
+        }
+    
     }
 
     /**
